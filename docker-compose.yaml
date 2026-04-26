@@ -66,10 +66,10 @@ services:
           - kong
     healthcheck:
       test: ["CMD", "kong", "health"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
+      interval: 10s          # ← увеличить интервал
+      timeout: 10s           # ← увеличить таймаут
+      retries: 10            # ← больше попыток
+      start_period: 60s      # ← ⚠️ КРИТИЧНО: 60 секунд на старт!
     depends_on:
       auth: { condition: service_healthy }
       rest: { condition: service_started }
