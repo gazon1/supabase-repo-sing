@@ -1,0 +1,18 @@
+{
+  "name": "singularity-functions",
+  "version": "1.0.0",
+  "module": "server.ts",
+  "scripts": {
+    "dev": "bun run --hot server.ts",
+    "start": "bun run server.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "diff-match-patch": "^1.0.5",
+    "hono": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/diff-match-patch": "^1.0.36",
+    "bun-types": "latest"
+  }
+}
