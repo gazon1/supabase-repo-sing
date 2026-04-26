@@ -1,18 +1,20 @@
 _format_version: '3.0'
 
+# Потребители (пользователи)
 consumers:
   - username: DASHBOARD
     tags:
       - dashboard
 
+# Basic Auth креды для Dashboard
 basicauth_credentials:
   - username: "${DASHBOARD_USERNAME}"
     password: "${DASHBOARD_PASSWORD}"
-    consumer:
-      username: DASHBOARD
+    consumer: DASHBOARD  # ← Ссылка на потребителя по имени (строка!)
     tags:
       - dashboard
 
+# Сервисы и маршруты
 services:
   - name: auth-v1
     url: http://auth:9999/
