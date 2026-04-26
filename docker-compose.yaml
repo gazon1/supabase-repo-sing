@@ -243,7 +243,7 @@ services:
   # ── MinIO (S3-compatible storage) ─────────────────────────────────────────
   minio:
     container_name: supabase-minio
-    image: minio/minio:RELEASE.2024-12-18T13-15-05Z
+    image: minio/minio:latest
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
