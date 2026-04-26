@@ -442,7 +442,7 @@ services:
       - ./volumes/db/logs.sql:/docker-entrypoint-initdb.d/migrations/99-logs.sql:Z
       - ./volumes/db/pooler.sql:/docker-entrypoint-initdb.d/migrations/99-pooler.sql:Z
       # Persistent data
-      - supabase-db-data:/var/lib/postgresql/data:Z
+      - supabase-db-data:/var/lib/postgresql/data
       # Config
       - db-config:/etc/postgresql-custom
     networks:
