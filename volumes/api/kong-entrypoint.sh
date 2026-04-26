@@ -46,4 +46,4 @@ awk '{
 # Remove empty key-auth credentials (unconfigured opaque keys)
 sed -i '/^[[:space:]]*- key:[[:space:]]*$/d' "$KONG_DECLARATIVE_CONFIG"
 
-exec kong docker-start --declarative-config "$KONG_DECLARATIVE_CONFIG"
+exec kong start -c "$KONG_DECLARATIVE_CONFIG"
