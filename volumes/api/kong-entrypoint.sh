@@ -46,4 +46,8 @@ awk '{
 # Remove empty key-auth credentials (unconfigured opaque keys)
 sed -i '/^[[:space:]]*- key:[[:space:]]*$/d' "$KONG_DECLARATIVE_CONFIG"
 rm -f /usr/local/kong/sockets/* 2>/dev/null || true
-exec kong start -c "$KONG_DECLARATIVE_CONFIG" --foreground
+
+
+# 3. ✅ КРИТИЧНО: отключаем daemon mode для Docker
+export KONG_NGINX_DAEMON=off
+exec kong start -c "$KONG_DECLARATIVE_CONFIG"
