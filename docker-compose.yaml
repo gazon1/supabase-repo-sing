@@ -12,6 +12,8 @@ services:
     container_name: supabase-studio
     image: supabase/studio:2026.04.08-sha-205cbe7
     restart: unless-stopped
+    ports:
+      - "3005:3000"
     expose:
       - "3000"
     healthcheck:
@@ -302,7 +304,7 @@ services:
   # ── Postgres Meta (DB management for Studio) ──────────────────────────────
   meta:
     container_name: supabase-meta
-    image: supabase/postgres-meta:v0.96.3
+    image: ghcr.io/supabase/postgres-meta:v0.96.4
     restart: unless-stopped
     depends_on:
       db: { condition: service_healthy }
@@ -332,6 +334,8 @@ services:
       interval: 5s
       retries: 3
       start_period: 10s
+    ports:
+      - "9000:9000"
     depends_on:
       db: { condition: service_healthy }
       kong: { condition: service_healthy }
