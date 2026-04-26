@@ -1,83 +1,90 @@
 _format_version: '3.0'
 
 consumers:
-  - username: anon
-    keyauth_credentials: [{ key: "${ANON_KEY}" }]
-  - username: service_role
-    keyauth_credentials: [{ key: "${SERVICE_ROLE_KEY}" }]
-
-acls:
-  - consumer: anon
-    group: anon
-  - consumer: service_role
-    group: admin
+  - username: DASHBOARD
+    tags:
+      - dashboard
 
 basicauth_credentials:
-  - consumer: dashboard
-    username: "${DASHBOARD_USERNAME}"
+  - username: "${DASHBOARD_USERNAME}"
     password: "${DASHBOARD_PASSWORD}"
+    consumer:
+      username: DASHBOARD
+    tags:
+      - dashboard
 
 services:
   - name: auth-v1
     url: http://auth:9999/
-    routes: [{ name: auth-v1, strip_path: true, paths: ["/auth/v1/"] }]
+    routes:
+      - name: auth-v1
+        strip_path: true
+        paths: [/auth/v1/]
     plugins:
       - name: cors
-      - name: key-auth
-        config: { hide_credentials: false }
-      - name: acl
-        config: { hide_groups_header: true, allow: [admin, anon] }
 
   - name: rest-v1
     url: http://rest:3000/
-    routes: [{ name: rest-v1, strip_path: true, paths: ["/rest/v1/"] }]
+    routes:
+      - name: rest-v1
+        strip_path: true
+        paths: [/rest/v1/]
     plugins:
       - name: cors
       - name: key-auth
-        config: { hide_credentials: true }
-      - name: acl
-        config: { hide_groups_header: true, allow: [admin, anon] }
+        config:
+          hide_credentials: true
 
   - name: realtime-v1
     url: http://realtime:4000/socket
     protocol: ws
-    routes: [{ name: realtime-v1, strip_path: true, paths: ["/realtime/v1/"] }]
+    routes:
+      - name: realtime-v1
+        strip_path: true
+        paths: [/realtime/v1/]
     plugins:
       - name: cors
-      - name: key-auth
-        config: { hide_credentials: false }
-      - name: acl
-        config: { hide_groups_header: true, allow: [admin, anon] }
 
   - name: storage-v1
     url: http://storage:5000/
-    routes: [{ name: storage-v1, strip_path: true, paths: ["/storage/v1/"] }]
+    routes:
+      - name: storage-v1
+        strip_path: true
+        paths: [/storage/v1/]
     plugins:
       - name: cors
 
   - name: functions-v1
     url: http://functions:9000/
-    routes: [{ name: functions-v1, strip_path: true, paths: ["/functions/v1/"] }]
+    routes:
+      - name: functions-v1
+        strip_path: true
+        paths: [/functions/v1/]
     plugins:
       - name: cors
       - name: key-auth
-        config: { hide_credentials: true }
-      - name: acl
-        config: { hide_groups_header: true, allow: [admin, anon] }
+        config:
+          hide_credentials: true
 
   - name: meta
     url: http://meta:8080/
-    routes: [{ name: meta, strip_path: true, paths: ["/pg/"] }]
+    routes:
+      - name: meta
+        strip_path: true
+        paths: [/pg/]
     plugins:
       - name: key-auth
-        config: { hide_credentials: false }
-      - name: acl
-        config: { hide_groups_header: true, allow: [admin] }
+        config:
+          hide_credentials: false
 
   - name: studio
     url: http://studio:3000/
-    routes: [{ name: studio, strip_path: true, paths: ["/"] }]
+    routes:
+      - name: studio
+        strip_path: true
+        paths: [/]
     plugins:
       - name: cors
       - name: basic-auth
-        config: { hide_credentials: true }
+        config:
+          hide_credentials: true

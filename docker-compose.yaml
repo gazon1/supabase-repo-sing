@@ -92,8 +92,8 @@ services:
       
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
-      DASHBOARD_USERNAME: ${DASHBOARD_USERNAME:-admin}
-      DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD:-admin}
+      DASHBOARD_USERNAME: "${DASHBOARD_USERNAME:-admin}"
+      DASHBOARD_PASSWORD: "${DASHBOARD_PASSWORD:-admin}"
     entrypoint: /home/kong/kong-entrypoint.sh
     labels:
       - "coolify.managed=true"
