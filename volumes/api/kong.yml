@@ -1,20 +1,33 @@
 _format_version: '3.0'
 
-# Потребители (пользователи)
 consumers:
   - username: DASHBOARD
     tags:
       - dashboard
+  - username: anon
+    tags:
+      - anon
+  - username: service_role
+    tags:
+      - service_role
 
-# Basic Auth креды для Dashboard
 basicauth_credentials:
-  - username: "${DASHBOARD_USERNAME}"
-    password: "${DASHBOARD_PASSWORD}"
-    consumer: DASHBOARD  # ← Ссылка на потребителя по имени (строка!)
+  - username: "$DASHBOARD_USERNAME"
+    password: "$DASHBOARD_PASSWORD"
+    consumer: DASHBOARD
     tags:
       - dashboard
 
-# Сервисы и маршруты
+keyauth_credentials:
+  - key: "$ANON_KEY"
+    consumer: anon
+    tags:
+      - anon
+  - key: "$SERVICE_ROLE_KEY"
+    consumer: service_role
+    tags:
+      - service_role
+
 services:
   - name: auth-v1
     url: http://auth:9999/
@@ -36,10 +49,10 @@ services:
       - name: key-auth
         config:
           hide_credentials: true
+          key_names: [apikey, Authorization]
 
   - name: realtime-v1
     url: http://realtime:4000/socket
-    protocol: ws
     routes:
       - name: realtime-v1
         strip_path: true
@@ -67,6 +80,7 @@ services:
       - name: key-auth
         config:
           hide_credentials: true
+          key_names: [apikey, Authorization]
 
   - name: meta
     url: http://meta:8080/
@@ -78,6 +92,7 @@ services:
       - name: key-auth
         config:
           hide_credentials: false
+          key_names: [apikey]
 
   - name: studio
     url: http://studio:3000/

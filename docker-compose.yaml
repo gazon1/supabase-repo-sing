@@ -45,9 +45,10 @@ services:
       NEXT_PUBLIC_ENABLE_EDGE_FUNCTIONS: "true"
       NEXT_ANALYTICS_BACKEND_PROVIDER: postgres
       
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       SNIPPETS_MANAGEMENT_FOLDER: /app/snippets
       EDGE_FUNCTIONS_MANAGEMENT_FOLDER: /app/edge-functions
+      CRYPTO_KEY: ${PG_META_CRYPTO_KEY:-change-me-at-least-32-chars!}
+      PG_META_CRYPTO_KEY: ${PG_META_CRYPTO_KEY:-change-me-at-least-32-chars!}
     volumes:
       - ./volumes/snippets:/app/snippets:Z
       - ./volumes/functions:/app/edge-functions:Z
@@ -88,14 +89,18 @@ services:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
       KONG_DNS_ORDER: LAST,A,CNAME
-      KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
+      KONG_PLUGINS: bundled,cors,key-auth
       KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
       KONG_NGINX_PROXY_PROXY_BUFFERS: "64 160k"
+      KONG_NGINX_WORKER_PROCESSES: "1"
       
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
       DASHBOARD_USERNAME: "${DASHBOARD_USERNAME:-admin}"
       DASHBOARD_PASSWORD: "${DASHBOARD_PASSWORD:-admin}"
+      ANON_KEY: ${ANON_KEY}           # ← добавить
+      SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}  # ← добавить
+
     entrypoint: /home/kong/kong-entrypoint.sh
     labels:
       - "coolify.managed=true"
@@ -236,7 +241,6 @@ services:
       AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
       FILE_SIZE_LIMIT: 52428800
       ENABLE_IMAGE_TRANSFORMATION: "true"
-      IMGPROXY_URL: http://imgproxy:5001
     networks:
       - supabase-net
     labels:
@@ -281,26 +285,6 @@ services:
     labels:
       - "coolify.managed=true"
 
-  # ── Image proxy for transformations ───────────────────────────────────────
-  imgproxy:
-    container_name: supabase-imgproxy
-    image: darthsim/imgproxy:v3.30.1
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "imgproxy", "health"]
-      timeout: 5s
-      interval: 5s
-      retries: 3
-    environment:
-      IMGPROXY_BIND: ":5001"
-      IMGPROXY_LOCAL_FILESYSTEM_ROOT: /
-      IMGPROXY_USE_ETAG: "true"
-      IMGPROXY_AUTO_WEBP: ${IMGPROXY_AUTO_WEBP:-true}
-    networks:
-      - supabase-net
-    labels:
-      - "coolify.managed=true"
-
   # ── Postgres Meta (DB management for Studio) ──────────────────────────────
   meta:
     container_name: supabase-meta
@@ -316,6 +300,7 @@ services:
       PG_META_DB_USER: supabase_admin
       PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
       CRYPTO_KEY: ${PG_META_CRYPTO_KEY:-change-me-at-least-32-chars!}
+      PG_META_CRYPTO_KEY: ${PG_META_CRYPTO_KEY:-change-me-at-least-32-chars!}
     networks:
       - supabase-net
     labels:

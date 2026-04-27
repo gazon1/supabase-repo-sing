@@ -28,8 +28,8 @@ fi
 # ✅ Экспортируем переменные ДО awk, чтобы они были видны
 export DASHBOARD_USERNAME="${DASHBOARD_USERNAME:-admin}"
 export DASHBOARD_PASSWORD="${DASHBOARD_PASSWORD:-admin}"
-export ANON_KEY="${ANON_KEY:-}"
-export SERVICE_ROLE_KEY="${SERVICE_ROLE_KEY:-}"
+export ANON_KEY="${SUPABASE_ANON_KEY:-${ANON_KEY:-}}"
+export SERVICE_ROLE_KEY="${SUPABASE_SERVICE_KEY:-${SERVICE_ROLE_KEY:-}}"
 
 # Substitute environment variables in the Kong declarative config.
 # Uses awk instead of eval/echo to preserve YAML quoting (eval strips double
